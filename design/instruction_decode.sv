@@ -111,7 +111,8 @@ module instruction_decode (
     input logic [31:0] ResultW, PCD, PCPlus4D,
     output logic [31:0] PCE, PCPlus4E, ImmExtE,
     output logic [31:0] RD1E, RD2E,
-    output logic [4:0] RdE, 
+    output logic [4:0] Rs1E, Rs2E, RdE, 
+    output logic [4:0] Rs1D, Rs2D,
     output logic RegWriteE, MemWriteE, JumpE, BranchE, ALUSrcE,
     output logic [1:0] ResultSrcE,
     output logic [2:0] ALUControlE
@@ -123,12 +124,18 @@ module instruction_decode (
     logic [4:0] RdD;
     logic [31:0] ImmExtD, RD1D, RD2D;
 
+    assign RdD = instruction_decode[11:7];
+    assign Rs1D = instruction_decode[19:15];
+    assign Rs2D = instruction_decode[24:20];
+
     flopr PCE_reg(.clk(clk), .reset(reset), .d(PCD), .q(PCE));
     flopr PCPlus4E_reg(.clk(clk), .reset(reset), .d(PCPlus4D), .q(PCPlus4E));
     flopr ImmExtE_reg(.clk(clk), .reset(reset), .d(ImmExtD), .q(ImmExtE));
     flopr RD1E_reg(.clk(clk), .reset(reset), .d(RD1D), .q(RD1E));
     flopr RD2E_reg(.clk(clk), .reset(reset), .d(RD2D), .q(RD2E));
     flopr #(5) RdE_reg(.clk(clk), .reset(reset), .d(RdD), .q(RdE));
+    flopr #(5) Rs1E_reg(.clk(clk), .reset(reset), .d(Rs1D), .q(Rs1E));
+    flopr #(5) Rs2E_reg(.clk(clk), .reset(reset), .d(Rs2D), .q(Rs2E));
     flopr #(1) RegWriteE_reg(.clk(clk), .reset(reset), .d(RegWriteD), .q(RegWriteE));
     flopr #(1) MemWriteE_reg(.clk(clk), .reset(reset), .d(MemWriteD), .q(MemWriteE));
     flopr #(1) JumpE_reg(.clk(clk), .reset(reset), .d(JumpD), .q(JumpE));

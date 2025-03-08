@@ -12,14 +12,14 @@ module imem #(
 
     logic [WORD_WIDTH - 1 : 0] RAM [(1 << ADDR_WIDTH) - 1 : 0];
 
-    assign instr = RAM[a];
+    assign instr = RAM[a[ADDR_WIDTH - 1 : 2]];
 
 endmodule
 
 module instruction_fetch #(
     parameter WORD_WIDTH = 32
 ) (
-    input logic PCSrcE, reset, clk,
+    input logic PCSrcE, reset, clk, StallF, StallD,
     input logic [31:0] PCTargetE,
     output logic [WORD_WIDTH - 1:0] instrD,
     output logic [WORD_WIDTH -1 : 0] PCPlus4D, PCD
@@ -27,12 +27,12 @@ module instruction_fetch #(
 
     logic [31:0] pc_nextF, pc_currentF, next_instr, PCPlus4F;
 
-    flopr pcregf(.clk(clk), .reset(reset), .d(pc_nextF), .q(pc_currentF));
+    flopenr pcregf(.clk(clk), .reset(reset), .enable(StallF), .d(pc_nextF), .q(pc_currentF));
     adder pc_plus_4_adder(.a(pc_currentF), .b(32'd4), .sum(PCPlus4F));
     mux2 pc_select_mux(.sel(PCSrcE), .a(PCPlus4F), .b(PCTargetE), .y(pc_nextF));
     imem imem(.a(pc_currentF[7:2]), .instr(next_instr));
-    flopr instregf(.clk(clk), .reset(reset), .d(next_instr), .q(instrD));
-    flopr PCPlus4D_reg(.clk(clk), .reset(reset), .d(PCPlus4F), .q(PCPlus4D));
-    flopr PCD_reg(.clk(clk), .reset(reset), .d(pc_currentF), .q(PCD));
+    flopenr instregf(.clk(clk), .reset(reset), .enable(StallD), .d(next_instr), .q(instrD));
+    flopenr PCPlus4D_reg(.clk(clk), .reset(reset), .enable(StallD), .d(PCPlus4F), .q(PCPlus4D));
+    flopenr PCD_reg(.clk(clk), .reset(reset), .enable(StallD), .d(pc_currentF), .q(PCD));
 
 endmodule

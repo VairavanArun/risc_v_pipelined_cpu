@@ -39,13 +39,6 @@ module adder #(
     assign sum = a + b;
 endmodule
 
-module signext(input logic [24:0] a,
-               output logic [31:0] y);
-
-    assign y = {{7{a[24]}}, a};
-
-endmodule
-
 module flopr #(
     parameter WIDTH = 32
 ) (
@@ -54,7 +47,7 @@ module flopr #(
     output logic [WIDTH - 1 : 0] q
 );
 
-    always_ff @ (posedge clk, negedge reset)
+    always_ff @ (posedge clk)
         if (~reset) q <= 0;
         else q <= d;
 
@@ -68,7 +61,7 @@ module flopenr #(
     output logic [WIDTH - 1 : 0] q
 );
 
-    always_ff @ (posedge clk, negedge reset)
+    always_ff @ (posedge clk)
         if (~reset) q <= 0;
         else if (enable) q <= d;
 
