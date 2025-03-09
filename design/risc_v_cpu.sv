@@ -12,7 +12,7 @@ module risc_v_cpu(
     /* Inputs for Fetch stage */
     logic PCSrcE;
     logic [31:0] PCTargetE;
-    logic StallF, StallD;
+    logic StallF, StallD, FlushD;
 
     /* Inputs to Decode stage */
     logic [31:0] InstrD, PCD, PCPlus4D;
@@ -40,7 +40,7 @@ module risc_v_cpu(
 
 
     instruction_fetch fetch_unit (.PCSrcE(PCSrcE), .reset(reset), .clk(clk), .PCTargetE(PCTargetE),
-                                  .StallF(StallF), .StallD(StallD),
+                                  .StallF(StallF), .StallD(StallD), .FlushD(FlushD),
                                   .instrD(InstrD), .PCPlus4D(PCPlus4D), .PCD(PCD));
     
     instruction_decode decode_unit(.clk(clk), .reset(FlushE), .instruction_decode(InstrD),
@@ -73,6 +73,6 @@ module risc_v_cpu(
                                   .RS1D(Rs1D), .RS2D(Rs2D),
                                   .RdE(RdE), .RegWriteM(RegWriteM), .RegWriteW(RegWriteW), .ResultSrcE0(ResultSrcE[0]),
                                   .ForwardAE(ForwardAE), .ForwardBE(ForwardBE),
-                                  .StallF(StallF), .StallD(StallD), .FlushE(FlushE));
+                                  .StallF(StallF), .StallD(StallD), .FlushE(FlushE), .FlushD(FlushD));
 
 endmodule

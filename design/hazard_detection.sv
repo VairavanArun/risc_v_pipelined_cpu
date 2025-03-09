@@ -20,10 +20,8 @@ endmodule
 module load_stall_detection(
     input logic ResultSrcE0,
     input logic [4:0] RS1D, RS2D, RdE,
-    output logic StallF, StallD, FlushE
+    output logic StallF, StallD, lw_stall
 );
-
-    logic lw_stall;
 
     always_comb
         begin
@@ -35,7 +33,6 @@ module load_stall_detection(
     
     assign StallF = lw_stall;
     assign StallD = lw_stall;
-    assign FlushE = lw_stall;
 
 endmodule
 
@@ -44,10 +41,12 @@ module hazard_detection(
     input logic [4:0] RdM, RdW, 
     input logic [4:0] RS1D, RS2D,
     input logic [4:0] RdE,
-    input logic RegWriteM, RegWriteW, ResultSrcE0,
+    input logic RegWriteM, RegWriteW, ResultSrcE0, PCSrcE,
     output logic [1:0] ForwardAE, ForwardBE,
-    output logic StallF, StallD, FlushE
+    output logic StallF, StallD, FlushE, FlushD
 );
+
+    logic lw_stall; 
 
     hazard_detection_check rs1_check (.RSE(RS1E), .RSM(RdM), .RSW(RdW), .RegWriteM(RegWriteM),
                                       .RegWriteW(RegWriteW), .ForwardE(ForwardAE));
@@ -56,7 +55,10 @@ module hazard_detection(
                                       .RegWriteW(RegWriteW), .ForwardE(ForwardBE));
 
     load_stall_detection lw_stall_check (.ResultSrcE0(ResultSrcE0), .RS1D(RS1D), .RS2D(RS2D), .RdE(RdE),
-                                         .StallD(StallD), .StallF(StallF), .FlushE(FlushE));
+                                         .StallD(StallD), .StallF(StallF), .lw_stall(lw_stall));
+
+    assign FlushD = PCSrcE;
+    assign FlushE = lw_stall | PCSrcE;
 
 
 endmodule
