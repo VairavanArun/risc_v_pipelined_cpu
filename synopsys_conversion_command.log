@@ -1,0 +1,12 @@
+#@ # 
+#@ # Running lc_shell Version V-2023.12-SP3 for linux64 -- Apr 23, 2024
+#@ # Date:   Mon Mar  3 06:31:43 2025
+#@ # Run by: vairavan@aeonlab2024
+#@ 
+
+read_lib std_cell_lib/NangateOpenCellLibrary/Front_End/Liberty/CCS/NangateOpenCellLibrary_typical_ccs.lib
+write_li -h
+write_lib -h
+man write_lib
+write_lib NangateOpenCellLibrary -output std_cell_lib/NangateOpenCellLibrary/Front_End/synopsys_db/ccs/NangateOpenCellLibrary_typical.db
+exit
