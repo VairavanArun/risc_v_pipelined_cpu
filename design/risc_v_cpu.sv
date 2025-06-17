@@ -72,6 +72,7 @@ module risc_v_cpu(
     hazard_detection hazard_unit (.RS1E(Rs1E), .RS2E(Rs2E), .RdM(RdM), .RdW(RdW),
                                   .RS1D(Rs1D), .RS2D(Rs2D),
                                   .RdE(RdE), .RegWriteM(RegWriteM), .RegWriteW(RegWriteW), .ResultSrcE0(ResultSrcE[0]),
+                                  .PCSrcE(PCSrcE),
                                   .ForwardAE(ForwardAE), .ForwardBE(ForwardBE),
                                   .StallF(StallF), .StallD(StallD), .FlushE(FlushE), .FlushD(FlushD));
 
